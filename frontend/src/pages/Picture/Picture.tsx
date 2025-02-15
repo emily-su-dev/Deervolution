@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Import axios for API requests
-import "./Picture.css"; 
+import "./Picture.css";
 import logo from "../../assets/deervolution_logo.png";
 import upper from "../../assets/deerv_upper_decor.png";
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
@@ -13,6 +13,9 @@ const Picture: React.FC = () => {
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [analyzedResult, setAnalyzedResult] = useState<string | null>(null); // Store API result
     const [loading, setLoading] = useState<boolean>(false); // Track loading state
+    const [canMakePosting, setCanMakePosting] = useState<boolean>(false);
+    const [geoLocation, setGeoLocation] = useState<{ lat: number; lng: number } | null>(null);
+    const [timestamp, setTimestamp] = useState<string | null>(null);
 
     // Handle image selection
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,6 +24,22 @@ const Picture: React.FC = () => {
             setSelectedFile(file); // Store the file for submission
             const imageURL = URL.createObjectURL(file);
             setPreviewImage(imageURL);
+
+            // Get current timestamp
+            setTimestamp(new Date().toLocaleString());
+
+            // Get geolocation
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        setGeoLocation({
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        });
+                    },
+                    (error) => console.error("Geolocation error:", error)
+                );
+            }
         }
     };
 
@@ -40,18 +59,28 @@ const Picture: React.FC = () => {
 
         setLoading(true); // Show loading state
         setAnalyzedResult(null); // Reset previous result
+        setCanMakePosting(false);
 
         const formData = new FormData();
         formData.append("image", selectedFile);
 
         try {
             const response = await axios.post(`${VITE_BACKEND_URL}/analyze-image`, formData, {
-                headers: { 
+                headers: {
                     "Content-Type": "multipart/form-data",
                 },
             });
 
-            setAnalyzedResult(response.data.result); // Store the returned animal name
+            let result = response.data.result;
+
+            if (result === "No prediction made - confidence too low") {
+                result = "Sorry, we couldn't confidently identify the animal. Try a clearer image!";
+            } else {
+                result = "This is a... " + result + "!";
+                setCanMakePosting(true); // Allow posting if a valid prediction was made
+            }
+
+            setAnalyzedResult(result); // Store the returned animal name
         } catch (error) {
             console.error("Error analyzing image:", error);
             setAnalyzedResult("Error analyzing image. Please try again.");
@@ -61,11 +90,12 @@ const Picture: React.FC = () => {
     };
 
     return (
-        <div>        
-            {/* Upper Decorative Shape */}
-            <img src={upper} alt="Upper Decor" className="upper-decor" />
+        <div>
             {/* Back Button */}
             <button className="back-button" onClick={() => navigate("/activity")}>🔙 Back</button>
+
+            {/* Upper Decorative Shape */}
+            <img src={upper} alt="Upper Decor" className="upper-decor" />
 
             <div className="picture-container">
                 <div>
@@ -79,7 +109,7 @@ const Picture: React.FC = () => {
                         <p className="subtitle">Upload a picture of the animal you found!</p>
                     </div>
                 </div>
-                
+
                 {/* Camera Input */}
                 <div className="button-group">
                     <input
@@ -113,7 +143,15 @@ const Picture: React.FC = () => {
                 {loading && <p className="loading-text">⏳ Analyzing image...</p>}
 
                 {/* Display Analyzed Result */}
-                {analyzedResult && <p className="result-text">🦉 This is a... <strong>{analyzedResult}</strong></p>}
+                {analyzedResult && <p className="result-text">🦉 <strong>{analyzedResult}</strong></p>}
+
+                {/* Show Time */}
+                {timestamp && <p className="info-text">🕒 Current Time: {timestamp}</p>}
+
+                {/* Show "Make Posting and Update Stats" button only if analysis is valid */}
+                {canMakePosting && (
+                    <button className="posting-button" onClick={() => navigate("/activity")}>📌 Make Posting and Update Stats!</button>
+                )}
             </div>
         </div>
     );

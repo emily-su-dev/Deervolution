@@ -84,4 +84,5 @@ button:focus-visible {
   max-height: 120px; /* Adjust height as needed */
   object-fit: cover; /* Ensure image covers the area without stretching */
   z-index: 10; /* Make sure it's above other elements */
+  pointer-events: none;
 }
