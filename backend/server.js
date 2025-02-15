@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
     res.send({ message: 'Express server is running!' });
 });
 
+
 app.post('/analyze-image', upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No image file uploaded' });

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { fetchData } from '../../backend/supabaseService'; // Import fetchData
 import './App.css';
-import SignUp from './pages/SignUp/SignUp.tsx';
 import SignIn from './pages/SignIn/SignIn.tsx';
+import SignUp from './pages/SignUp/SignUp.tsx';
 
 
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
