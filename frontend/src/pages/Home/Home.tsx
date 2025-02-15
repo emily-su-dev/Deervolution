@@ -9,7 +9,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#A8652C] text-white">
-      {/* Background Shape */}
+      {/* Upper Decorative Shape */}
       <img src={upper} alt="Upper Decor" className="upper-decor" />
 
       {/* Logo */}
