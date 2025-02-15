@@ -6,7 +6,7 @@
     justify-content: center;
     text-align: center;
     height: 90vh;
-    background-color: #e9c193;
+    background-color: #ffdfb5;
     font-family: "Montserrat", sans-serif;
     font-weight: 400;
     position: relative;
@@ -68,6 +68,7 @@
 }
 
 .upload-button:hover, .submit-button:hover {
+    color: #d3884b;
     background-color: #611a04;
     transform: scale(1.05);
 }
