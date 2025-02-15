@@ -5,34 +5,6 @@ const { spawn } = require('child_process');
 const fs = require('fs').promises;
 const path = require('path');
 
-// Add this function to detect Python command
-async function getPythonCommand() {
-    // Order from most specific to most general
-    const commands = [
-        'python3',
-        'python',
-        'py -3',    // Windows Python Launcher (Python 3)
-        'py',       // Windows Python Launcher
-        'python3.exe',
-        'python.exe'
-    ];
-    
-    for (const cmd of commands) {
-        try {
-            await new Promise((resolve, reject) => {
-                // Use shell: true for Windows to handle 'py -3' properly
-                const process = spawn(cmd, ['--version'], { shell: true });
-                process.on('close', (code) => code === 0 ? resolve() : reject());
-                process.on('error', reject);
-            });
-            return cmd;
-        } catch (err) {
-            continue;
-        }
-    }
-    throw new Error('No Python interpreter found. Please install Python.');
-}
-
 const app = express();
 const PORT = 8000;
 
@@ -54,13 +26,13 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
     const tempFilePath = path.join('temp', `${Date.now()}.jpg`);
     
     try {
-        const pythonCommand = await getPythonCommand();
         await fs.mkdir('temp', { recursive: true });
         await fs.writeFile(tempFilePath, req.file.buffer);
 
+        // Create a Promise to handle the Python process
         const analyzeImage = () => {
             return new Promise((resolve, reject) => {
-                const pythonProcess = spawn(pythonCommand, ['analyze.py'], {
+                const pythonProcess = spawn('python3', ['analyze.py'], {
                     env: { ...process.env, IMAGE_PATH: tempFilePath }
                 });
 

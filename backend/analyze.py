@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from PIL import Image
 import os
 from model_loader import classifier
