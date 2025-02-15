@@ -39,7 +39,7 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
         // Create a Promise to handle the Python process
         const analyzeImage = () => {
             return new Promise((resolve, reject) => {
-                const pythonProcess = spawn('python3', ['analyze.py'], {
+                const pythonProcess = spawn('python', ['analyze.py'], {
                     env: { ...process.env, IMAGE_PATH: tempFilePath }
                 });
 
@@ -83,7 +83,7 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
 
 
 app.post('/increment', async (req, res) => {
-    const { result, address, time } = req.body;
+    const { result, address, time, userid } = req.body;
   
     // Validate the 'result' field to make sure it corresponds to a valid animal
     if (!result || !['deers', 'geese', 'racoons', 'squirrels', 'sparrow'].includes(result)) {
@@ -92,11 +92,6 @@ app.post('/increment', async (req, res) => {
   
     try {
       // The userid should be passed as part of the request
-      const { userid } = req.query;
-  
-      if (!userid) {
-        return res.status(400).send('Missing userid');
-      }
   
       // Step 1: Increment the corresponding animal column for the given userid in accountdatabase
       const { data: updateData, error: updateError } = await supabase
