@@ -4,7 +4,6 @@ import './App.css';
 import SignIn from './pages/SignIn/SignIn.tsx';
 import SignUp from './pages/SignUp/SignUp.tsx';
 
-
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Activity from "./pages/Activity/Activity.tsx";
 import Home from "./pages/Home/Home.tsx";
@@ -44,8 +43,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<SignUp />} />
+        <Route path="/" element={<Home />} />        
         <Route path="/SignIn" element={<SignIn />} />
+        <Route path="/SignUp" element={<SignUp />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/activity" element={<Activity />} />
         <Route path="/picture" element={<Picture />} />

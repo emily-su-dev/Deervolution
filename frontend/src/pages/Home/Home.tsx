@@ -8,13 +8,13 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#A8652C] text-white">
+    <div>
       {/* Upper Decorative Shape */}
       <img src={upper} alt="Upper Decor" className="upper-decor" />
 
       {/* Logo */}
       <div className="flex flex-col items-center gap-2 mt-16">
-        <div className="w-16 h-16 flex items-center justify-center border-2 border-white rounded-lg">
+        <div>
           <img src={logo} alt="Deervolution Logo" className="logo" />
         </div>
         <h1 className="text-2xl font-bold">Deervolution</h1>
