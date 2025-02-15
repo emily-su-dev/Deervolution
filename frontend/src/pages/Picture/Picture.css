@@ -5,39 +5,46 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    height: 100vh;
-    background-color: #f9f9f9;
-    font-family: "Arial", sans-serif;
+    height: 90vh;
+    background-color: #e9c193;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
     position: relative;
+    top: 0;
 }
 
 /* Back button (top-left) */
 .back-button {
     position: absolute;
     top: 20px;
-    left: 20px;
+    left: 10px;
     background: none;
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
-    color: #333;
+    color: #463926;
     transition: 0.2s;
 }
 
 .back-button:hover {
-    color: #007bff;
+    color: #e9c193;
 }
 
 /* Title and subtitle */
 .title {
+    color: rgb(80, 45, 0);
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .subtitle {
+    width: 300px; /* Set a fixed width */
+    word-wrap: break-word; /* Ensures long words wrap */
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
     font-size: 1.1rem;
-    color: #555;
+    color: #291600;
 }
 
 /* Button group for camera and gallery */
@@ -50,7 +57,7 @@
 
 /* Upload buttons */
 .upload-button, .submit-button {
-    background-color: #27ae60;
+    background-color: #a6520c;
     color: white;
     font-size: 1rem;
     padding: 10px 15px;
@@ -61,7 +68,7 @@
 }
 
 .upload-button:hover, .submit-button:hover {
-    background-color: #2ecc71;
+    background-color: #611a04;
     transform: scale(1.05);
 }
 
@@ -89,6 +96,6 @@
 .result-text {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #2c3e50;
+    color: #611a04;
     margin-top: 20px;
 }

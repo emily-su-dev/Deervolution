@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
+import logo from "../../assets/deervolution_logo.png";
+import upper from "../../assets/deerv_upper_decor.png";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -8,23 +10,23 @@ const Home: React.FC = () => {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#A8652C] text-white">
       {/* Background Shape */}
-      <div className="absolute top-0 left-0 w-full h-32 bg-[#8A5224] clip-polygon"></div>
+      <img src={upper} alt="Upper Decor" className="upper-decor" />
 
       {/* Logo */}
       <div className="flex flex-col items-center gap-2 mt-16">
         <div className="w-16 h-16 flex items-center justify-center border-2 border-white rounded-lg">
-          <span className="text-4xl">🦌</span> 
+          <img src={logo} alt="Deervolution Logo" className="logo" />
         </div>
         <h1 className="text-2xl font-bold">Deervolution</h1>
         <p className="text-sm">Discover wild life at UTM!</p>
       </div>
 
       {/* TEMPORARY ACTIVITY BUTTON */}
-      <button onClick={() => navigate("/activity")}>Go to activity</button>
+      <button onClick={() => navigate("/activity")}>Go to Activity</button>
 
-      {/* Button */}
+      {/* Sign-up button */}
       <button className="mt-6 px-6 py-3 bg-[#5C2E15] rounded-lg text-white font-bold text-lg shadow-md hover:bg-[#6F3B1F] transition">
-        Create an account
+        Create An Account
       </button>
 
       {/* Sign-in link */}

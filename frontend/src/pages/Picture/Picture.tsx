@@ -62,7 +62,9 @@ const Picture: React.FC = () => {
 
             {/* Page Title */}
             <h1 className="title">📸 Capture Your Animal Sighting</h1>
-            <p className="subtitle">Upload a picture of the animal you found!</p>
+            <div className="subtitle">
+                <p className="subtitle">Upload a picture of the animal you found!</p>
+            </div>
 
             {/* Camera Input */}
             <div className="button-group">

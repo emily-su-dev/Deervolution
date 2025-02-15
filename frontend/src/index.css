@@ -73,3 +73,14 @@ button:focus-visible {
     background-color: #a6520c;
   }
 }
+
+.upper-decor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto; /* Maintain aspect ratio */
+  max-height: 120px; /* Adjust height as needed */
+  object-fit: cover; /* Ensure image covers the area without stretching */
+  z-index: 10; /* Make sure it's above other elements */
+}
