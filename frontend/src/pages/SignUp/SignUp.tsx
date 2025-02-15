@@ -19,45 +19,63 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
-  const checkIfEmailExists = async (email: string) => {
-    const { data, error } = await supabase
-      .from("Users") // Assuming 'users' is your table name
-      .select("email")
-      .eq("email", email); // Check if the email already exists in the database
-
-    if (error) {
-      setMessage(`Error checking email: ${error.message}`);
-      return true;
-    }
-    return data?.length > 0; // If data is not empty, email already exists
-  };
-  
-
   const signUpUser = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
-
-    console.log(supabase);
-    console.log(email);
-    console.log(supabaseUrl);
-    console.log(supabaseKey);
-
-    const emailExists = await checkIfEmailExists(email);
-    console.log(emailExists);
-    if(emailExists){
-      setMessage("This email is already registered.");
+    e.preventDefault();
+  
+    if (!email || !password) {
+      setMessage("Email and password are required.");
       return;
     }
-
-    const { error } = await supabase.auth.signUp({ email, password });
-
+  
+    // Sign up user with Supabase auth
+    const { data, error } = await supabase.auth.signUp({ email, password });
+  
     if (error) {
       setMessage(`Error: ${error.message}`);
+      return;
+    }
+  
+    console.log("User created:", data);
+    setMessage("Sign-up successful! Check your email for verification.");
+  
+    // Insert new row into 'accountdatabase'
+    const { error: insertError } = await supabase
+      .from("accountdatabase") // Ensure this is your actual table name
+      .insert([{ userid: email }]); // Other columns will use default values
+  
+    if (insertError) {
+      console.error("Error inserting user into accountdatabase:", insertError.message);
     } else {
-      setMessage("Sign-up successful! Check your email for verification."); 
-
+      console.log("User successfully added to accountdatabase");
+    }
+  
+    // Step 1: Create a new table for the user dynamically
+    try {
+      const sanitizedEmail = email.replace('@', '_').replace('.', '_');
+      const createTableQuery = `
+        CREATE TABLE IF NOT EXISTS ${sanitizedEmail}_animal_history (
+          id SERIAL PRIMARY KEY,
+          animal_type TEXT NOT NULL,
+          date_time TIMESTAMPTZ NOT NULL DEFAULT now(),
+          location TEXT NOT NULL
+        );
+      `;
+  
+      // Call the run_sql function
+      const { error: tableError } = await supabase.rpc('run_sql', {
+        query: createTableQuery
+      });
+  
+      if (tableError) {
+        console.error("Error creating user-specific table:", tableError.message);
+      } else {
+        console.log(`Table for ${email} created successfully!`);
+      }
+    } catch (err) {
+      console.error("Error executing dynamic SQL:", err);
     }
   };
-
+  
   return (
     <div>
       <h2>Sign Up</h2>
