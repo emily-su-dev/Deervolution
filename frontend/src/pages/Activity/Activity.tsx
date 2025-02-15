@@ -86,6 +86,7 @@ const Activity: React.FC = () => {
             getNearestPlace(newLocation); // Fetch updated place name
 
             if (map && marker) {
+              map.setCenter(newLocation);
               marker.setPosition(newLocation);
             }
           },

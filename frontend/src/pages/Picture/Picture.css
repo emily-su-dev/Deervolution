@@ -49,7 +49,7 @@
 }
 
 /* Upload buttons */
-.upload-button {
+.upload-button, .submit-button {
     background-color: #27ae60;
     color: white;
     font-size: 1rem;
@@ -60,7 +60,7 @@
     transition: 0.3s;
 }
 
-.upload-button:hover {
+.upload-button:hover, .submit-button:hover {
     background-color: #2ecc71;
     transform: scale(1.05);
 }
@@ -76,4 +76,19 @@
     max-width: 80%;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading text */
+.loading-text {
+    font-size: 1.2rem;
+    color: #ff9800;
+    margin-top: 15px;
+}
+
+/* Display analyzed result */
+.result-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-top: 20px;
 }
