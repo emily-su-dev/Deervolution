@@ -1,6 +1,11 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./SignIn.css";
+import { Link } from "react-router-dom";
+
+import logo from "../../assets/deervolution_logo.png";
+import upper from "../../assets/deerv_upper_decor.png";
 
 // Initialize Supabase client
 const supabaseUrl: string = import.meta.env.VITE_SUPABASE_URL as string;
@@ -36,23 +41,36 @@ const SignIn: React.FC = () => {
 
   return (
     <div>
-      <h2>Sign In</h2>
+      <img src={upper} alt="Upper Decor" className="upper-decor" />
+      <img src={logo} alt="Deervolution Logo" className="logo" />
+      
+      <h1>Sign In</h1>
       <form onSubmit={signInUser}>
-        <input
-          type="email"
-          placeholder="Enter email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="email-container">
+          <input
+            type="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="password-container">
+          <input
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>  
+        
         <button type="submit">Sign In</button>
+
+        <p>
+          Don't have an account? <Link to="/SignUp">Sign Up</Link>
+        </p>
       </form>
       {message && <p>{message}</p>}
     </div>

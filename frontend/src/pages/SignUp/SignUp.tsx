@@ -1,6 +1,10 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import "./SignUp.css"; 
+
+import logo from "../../assets/deervolution_logo.png";
+import upper from "../../assets/deerv_upper_decor.png";
 
 // Define Supabase client types
 
@@ -78,25 +82,34 @@ const SignUp: React.FC = () => {
   
   return (
     <div>
-      <h2>Sign Up</h2>
+      {/* Upper Decorative Shape */}
+      <img src={upper} alt="Upper Decor" className="upper-decor" />
+      <img src={logo} alt="Deervolution Logo" className="logo" />
+      <h1>Sign Up</h1>
       <form onSubmit={signUpUser}>
-        <input
-          type="email"
-          placeholder="Enter email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="email-container">
+          <input
+            type="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="password-container">
+          <input
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>  
+        
         <button type="submit">Sign Up</button>
         <p>
-          Already have an account? <Link to="/signin">Sign In</Link>
+          Already have an account? <Link to="/SignIn">Sign In</Link>
         </p>
       </form>
       {message && <p>{message}</p>}
