@@ -1,3 +1,4 @@
+/// <reference types="@types/google.maps" />
 import React, { useEffect, useState } from "react";
 import "./Activity.css"; // Import the CSS file for styling
 import { useNavigate } from "react-router-dom";
@@ -64,9 +65,9 @@ const Activity: React.FC = () => {
   const getNearestPlace = (location: { lat: number; lng: number }) => {
     if (window.google) {
       const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ location }, (results, status) => {
-        if (status === "OK" && results[0]) {
-          setNearestPlace(results[0].formatted_address); // Set place name
+      geocoder.geocode({ location }, (results: google.maps.GeocoderResult[] | null, status) => {
+        if (status === "OK" && results && results[0]?.formatted_address) {
+          setNearestPlace(results[0].formatted_address);
         } else {
           console.error("Geocode failed:", status);
           setNearestPlace("Unknown Location");
