@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import { fetchData } from '../../backend/supabaseService'; // Import fetchData
 import './App.css';
-import SignUp from './SignUp';
+import SignUp from './pages/SignUp/SignUp.tsx';
+import SignIn from './pages/SignIn/SignIn.tsx';
+
+
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Activity from "./pages/Activity/Activity.tsx";
+import Home from "./pages/Home/Home.tsx";
+import Picture from "./pages/Picture/Picture.tsx";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -34,13 +41,16 @@ function App() {
   }, []);
 
   if (loading) return <p>Loading...</p>
-
   return (
-    <>
-      <div>
-        <SignUp/>
-      </div>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<SignUp />} />
+        <Route path="/SignIn" element={<SignIn />} />
+        <Route path="/Home" element={<Home />} />
+        <Route path="/activity" element={<Activity />} />
+        <Route path="/picture" element={<Picture />} />
+      </Routes>
+    </Router>
   );
 }
 
