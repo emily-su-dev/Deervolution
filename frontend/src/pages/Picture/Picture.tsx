@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Import axios for API requests
 import "./Picture.css"; 
+import logo from "../../assets/deervolution_logo.png";
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
 const Picture: React.FC = () => {
@@ -63,12 +64,18 @@ const Picture: React.FC = () => {
             {/* Back Button */}
             <button className="back-button" onClick={() => navigate("/activity")}>🔙 Back</button>
 
-            {/* Page Title */}
-            <h1 className="title">📸 Capture Your Animal Sighting</h1>
-            <div className="subtitle">
-                <p className="subtitle">Upload a picture of the animal you found!</p>
+            <div>
+                <img src={logo} alt="Deervolution Logo" className="logo" />
             </div>
 
+            {/* Page Title */}
+            <div className="title-container">
+                <h1 className="title">📸 Capture Your Animal Sighting</h1>
+                <div className="subtitle">
+                    <p className="subtitle">Upload a picture of the animal you found!</p>
+                </div>
+            </div>
+            
             {/* Camera Input */}
             <div className="button-group">
                 <input

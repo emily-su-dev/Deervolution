@@ -4,7 +4,7 @@
 :root {
   font-family: 'Montserrat', sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 600;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -18,7 +18,7 @@
 
 a {
   font-weight: 1000;
-  color: #5f2307;
+  color: #07555f;
   text-decoration: inherit;
 }
 a:hover {
