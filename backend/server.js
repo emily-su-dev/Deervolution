@@ -12,7 +12,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const corsOptions = {
-    origin: '*',
+    origin: ['http://localhost:5173', 'https://deervolution.onrender.com'],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type']
 };
