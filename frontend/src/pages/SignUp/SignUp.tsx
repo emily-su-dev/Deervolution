@@ -27,7 +27,24 @@ const SignUp: React.FC = () => {
       return;
     }
   
-    // Sign up user with Supabase auth
+    // Step 1: Check if email already exists in 'accountdatabase'
+    const { data: existingUser, error: userCheckError } = await supabase
+      .from("accountdatabase")
+      .select("userid")
+      .eq("userid", email); // Check if the email already exists in 'accountdatabase'
+  
+    if (userCheckError) {
+      setMessage(`Error checking if email exists: ${userCheckError.message}`);
+      return;
+    }
+  
+    if (existingUser && existingUser.length > 0) {
+      // If email exists, stop and display message
+      setMessage("This email is already registered. Please sign in.");
+      return;
+    }
+  
+    // Step 2: Sign up user with Supabase auth
     const { data, error } = await supabase.auth.signUp({ email, password });
   
     if (error) {
@@ -38,7 +55,7 @@ const SignUp: React.FC = () => {
     console.log("User created:", data);
     setMessage("Sign-up successful! Check your email for verification.");
   
-    // Insert new row into 'accountdatabase'
+    // Step 3: Insert new row into 'accountdatabase'
     const { error: insertError } = await supabase
       .from("accountdatabase") // Ensure this is your actual table name
       .insert([{ userid: email }]); // Other columns will use default values
@@ -49,7 +66,7 @@ const SignUp: React.FC = () => {
       console.log("User successfully added to accountdatabase");
     }
   
-    // Step 1: Create a new table for the user dynamically
+    // Step 4: Create a new table for the user dynamically
     try {
       const sanitizedEmail = email.replace('@', '_').replace('.', '_');
       const createTableQuery = `
@@ -75,6 +92,7 @@ const SignUp: React.FC = () => {
       console.error("Error executing dynamic SQL:", err);
     }
   };
+  
   
   return (
     <div>
