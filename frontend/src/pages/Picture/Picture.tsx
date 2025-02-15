@@ -69,6 +69,7 @@ const Picture: React.FC = () => {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
+                timeout: 60000, // 60 seconds (1 minute) timeout
             });
 
             let result = response.data.result;
