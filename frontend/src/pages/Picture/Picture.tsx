@@ -42,7 +42,7 @@ const Picture: React.FC = () => {
         formData.append("image", selectedFile);
 
         try {
-            const response = await axios.post("http://localhost:8000/analyze-image", formData, {
+            const response = await axios.post("18.226.185.18:8000/analyze-image", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
