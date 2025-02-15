@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Import axios for API requests
 import "./Picture.css"; 
+const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
 const Picture: React.FC = () => {
     const navigate = useNavigate();
@@ -42,8 +43,10 @@ const Picture: React.FC = () => {
         formData.append("image", selectedFile);
 
         try {
-            const response = await axios.post("http://localhost:8000/analyze-image", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
+            const response = await axios.post(`${VITE_BACKEND_URL}/analyze-image`, formData, {
+                headers: { 
+                    "Content-Type": "multipart/form-data",
+                },
             });
 
             setAnalyzedResult(response.data.result); // Store the returned animal name
