@@ -73,6 +73,7 @@ const SignUp: React.FC = () => {
     // Step 4: Create a new table for the user dynamically
     try {
       const sanitizedEmail = email.replace('@', '_').replace('.', '_');
+      console.log("Sanitized email:", sanitizedEmail);
       const createTableQuery = `
         CREATE TABLE IF NOT EXISTS ${sanitizedEmail}_animal_history (
           id SERIAL PRIMARY KEY,
