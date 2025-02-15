@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Import axios for API requests
 import "./Picture.css"; 
 import logo from "../../assets/deervolution_logo.png";
+import upper from "../../assets/deerv_upper_decor.png";
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
 const Picture: React.FC = () => {
@@ -60,56 +61,60 @@ const Picture: React.FC = () => {
     };
 
     return (
-        <div className="picture-container">
+        <div>        
+            {/* Upper Decorative Shape */}
+            <img src={upper} alt="Upper Decor" className="upper-decor" />
             {/* Back Button */}
             <button className="back-button" onClick={() => navigate("/activity")}>🔙 Back</button>
 
-            <div>
-                <img src={logo} alt="Deervolution Logo" className="logo" />
-            </div>
-
-            {/* Page Title */}
-            <div className="title-container">
-                <h1 className="title">📸 Capture Your Animal Sighting</h1>
-                <div className="subtitle">
-                    <p className="subtitle">Upload a picture of the animal you found!</p>
+            <div className="picture-container">
+                <div>
+                    <img src={logo} alt="Deervolution Logo" className={previewImage ? "logo-uploaded" : "logo"} />
                 </div>
-            </div>
-            
-            {/* Camera Input */}
-            <div className="button-group">
+
+                {/* Page Title */}
+                <div className={previewImage ? "title-container-uploaded" : "title-container"}>
+                    <h1 className="title">📸 Capture Your Animal Sighting</h1>
+                    <div className="subtitle">
+                        <p className="subtitle">Upload a picture of the animal you found!</p>
+                    </div>
+                </div>
+                
+                {/* Camera Input */}
+                <div className="button-group">
+                    <input
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        onChange={handleImageChange}
+                        className="hidden-input"
+                    />
+                    <button className="upload-button" onClick={openFilePicker}>📂 Choose from Gallery</button>
+                </div>
+
+                {/* Hidden File Input for Gallery Upload */}
                 <input
                     type="file"
                     accept="image/*"
-                    capture="environment"
+                    ref={fileInputRef}
                     onChange={handleImageChange}
                     className="hidden-input"
                 />
-                <button className="upload-button" onClick={openFilePicker}>📂 Choose from Gallery</button>
+
+                {/* Preview Uploaded Image */}
+                {previewImage && <img src={previewImage} alt="Uploaded" className="preview-image" />}
+
+                {/* Submit Button */}
+                {previewImage && !loading && (
+                    <button className="submit-button" onClick={submitImage}>📤 Submit for Analysis</button>
+                )}
+
+                {/* Loading Indicator */}
+                {loading && <p className="loading-text">⏳ Analyzing image...</p>}
+
+                {/* Display Analyzed Result */}
+                {analyzedResult && <p className="result-text">🦉 This is a... <strong>{analyzedResult}</strong></p>}
             </div>
-
-            {/* Hidden File Input for Gallery Upload */}
-            <input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                onChange={handleImageChange}
-                className="hidden-input"
-            />
-
-            {/* Preview Uploaded Image */}
-            {previewImage && <img src={previewImage} alt="Uploaded" className="preview-image" />}
-
-            {/* Submit Button */}
-            {previewImage && !loading && (
-                <button className="submit-button" onClick={submitImage}>📤 Submit for Analysis</button>
-            )}
-
-            {/* Loading Indicator */}
-            {loading && <p className="loading-text">⏳ Analyzing image...</p>}
-
-            {/* Display Analyzed Result */}
-            {analyzedResult && <p className="result-text">🦉 This is a <strong>{analyzedResult}</strong></p>}
         </div>
     );
 };
