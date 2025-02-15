@@ -141,7 +141,12 @@ const Picture: React.FC = () => {
                 )}
 
                 {/* Loading Indicator */}
-                {loading && <p className="loading-text">⏳ Analyzing image...</p>}
+                {loading && (
+                    <div className="loading-container">
+                        <div className="spinner"></div>
+                        <p className="loading-text">Analyzing image...</p>
+                    </div>
+                )}
 
                 {/* Display Analyzed Result */}
                 {analyzedResult && <p className="result-text">🦉 <strong>{analyzedResult}</strong></p>}
