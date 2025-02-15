@@ -6,6 +6,7 @@ const Home: React.FC = () => {
 
   return (
     <div>
+      <img src="/image.svg" alt="DeerVolution Logo" style={{ width: 100, marginBottom: 20 }} />
       <h1>Home Page</h1>
       <button onClick={() => navigate("/activity")}>Go to Activity</button>
     </div>
