@@ -11,13 +11,7 @@ const PORT = 8000;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-const corsOptions = {
-    origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
