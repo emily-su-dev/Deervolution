@@ -9,6 +9,9 @@
     width: 100vw;  /* Take full screen width */
     background-color: #f4f4f4;
     font-family: "Arial", sans-serif;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 /* Title styling */
