@@ -1,6 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
 
+/* Override the #root element of Supabase UI */
+#root {
+  background-color: transparent !important;  /* Remove unwanted background */
+  padding: 0 !important;  /* Remove any unwanted padding */
+  margin: 0 !important;  /* Remove any unwanted margin */
+  min-width: 320px;
+  min-height: 100vh;
+
+  height: 100vh !important;  /* Full viewport height */
+  width: 100% !important;    /* Full width */
+  max-width: 1200px;         /* Limit the maximum width */
+  margin: 0 auto;            /* Center it horizontally */
+  padding: 20px;             /* Adjust padding if necessary */
+
+  /* Center using CSS Grid */
+  display: grid;               /* Enable CSS Grid */
+  place-items: center;         /* This is a shorthand for `align-items` and `justify-items` */
+  height: 100vh;               /* Full height of the viewport */
+  width: 100%;                 /* Full width of the viewport */
+  margin: 0;                   /* Remove any default margin */
+}
+
 :root {
   font-family: 'Montserrat', sans-serif;
   line-height: 1.5;

@@ -25,14 +25,14 @@ const Home: React.FC = () => {
       <button onClick={() => navigate("/activity")}>Go to Activity</button>
 
       {/* Sign-up button */}
-      <button className="mt-6 px-6 py-3 bg-[#5C2E15] rounded-lg text-white font-bold text-lg shadow-md hover:bg-[#6F3B1F] transition">
+      <button onClick={() => navigate("/SignUp")}>
         Create An Account
       </button>
 
       {/* Sign-in link */}
       <p className="mt-4 text-xs">
         Have an account?{" "}
-        <a href="#" className="underline hover:text-gray-200">
+        <a href="#" className="underline hover:text-gray-200" onClick={() => navigate("/SignIn")}>
           Sign in
         </a>
       </p>
