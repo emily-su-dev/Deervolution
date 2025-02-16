@@ -1,32 +1,31 @@
 import { useEffect, useState } from 'react';
-import { fetchData } from '../../backend/supabaseService'; // Import fetchData
 import './App.css';
-import SignIn from './pages/SignIn/SignIn.tsx';
-import SignUp from './pages/SignUp/SignUp.tsx';
-
+import SignIn from './pages/SignIn/SignIn';
+import SignUp from './pages/SignUp/SignUp';
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import Activity from "./pages/Activity/Activity.tsx";
-import Home from "./pages/Home/Home.tsx";
-import Picture from "./pages/Picture/Picture.tsx";
+import Activity from "./pages/Activity/Activity";
+import Home from "./pages/Home/Home";
+import Picture from "./pages/Picture/Picture";
+
+// Define the interface for your data
+interface AccountData {
+  userid: string;
+  deers: number;
+  geese: number;
+  racoons: number;
+  squirrels: number;
+  sparrow: number;
+}
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  // Define the type of 'data' to match the structure you expect from Supabase
-  const [data, setData] = useState<Array<{ 
-    userid: string;  
-    deers: number;
-    geese: number;
-    racoons: number;
-    squirrels: number;
-    sparrow: number;
-   }>>([]);
+  const [data, setData] = useState<AccountData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const fetchedData = await fetchData();  // Call the fetchData function
+        const response = await fetch('http://localhost:8000/data');
+        const fetchedData = await response.json();
         setData(fetchedData);
         console.log('Fetched data: ', fetchedData);
       } catch (error) {
