@@ -4,10 +4,12 @@ import axios from "axios"; // Import axios for API requests
 import "./Picture.css";
 import logo from "../../assets/deervolution_logo.png";
 import upper from "../../assets/deerv_upper_decor.png";
+import { useAuth } from '../../context/AuthContext';
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
 const Picture: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null); // Store the selected file
     const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -17,8 +19,6 @@ const Picture: React.FC = () => {
     const [canMakePosting, setCanMakePosting] = useState<boolean>(false);
     const [geoLocation, setGeoLocation] = useState<{ lat: number; lng: number } | null>(null);
     const [timestamp, setTimestamp] = useState<string | null>(null);
-    const [userid, setUserid] = useState<string>("user123@example.com"); // Replace with actual user ID from database!!
-
     // Handle image selection
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -99,20 +99,25 @@ const Picture: React.FC = () => {
             return;
         }
 
-        setPosting(true); // Disable button while posting
+        if (!user?.email) {
+            alert("You must be logged in to make a posting.");
+            return;
+        }
+
+        setPosting(true);
 
         const result = analyzedResult.replace("This is a... ", "").replace("!", "");
         const postData = {
             result,
             address: geoLocation ? `${geoLocation.lat}, ${geoLocation.lng}` : "Unknown",
             time: timestamp || new Date().toISOString(),
-            userid,
+            userid: user.email,
         };
 
         try {
             const response = await axios.post(`${VITE_BACKEND_URL}/increment`, postData);
             alert(response.data);
-            navigate("/activity"); // Navigate back to activity page
+            navigate("/activity");
         } catch (error) {
             console.error("Error making posting:", error);
             alert("Error making posting. Please try again.");

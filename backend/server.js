@@ -35,7 +35,7 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
         // Create a Promise to handle the Python process
         const analyzeImage = () => {
             return new Promise((resolve, reject) => {
-                const pythonProcess = spawn('python', ['analyze.py'], {
+                const pythonProcess = spawn('python3', ['analyze.py'], {
                     env: { ...process.env, IMAGE_PATH: tempFilePath }
                 });
 
