@@ -22,7 +22,11 @@ const Profile: React.FC = () => {
 
         const fetchProfileData = async () => {
             try {
-                const response = await axios.get(`${VITE_BACKEND_URL}/profile/${encodeURIComponent(user.id)}`);
+                const response = await axios.get(`${VITE_BACKEND_URL}/profile/${encodeURIComponent(user.id)}`, {
+                    headers: {
+                        'ngrok-skip-browser-warning': '69420'
+                    }
+                });
                 setStats(response.data);
             } catch (error) {
                 console.error("Error fetching profile data:", error);
