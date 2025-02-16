@@ -5,8 +5,10 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    height: 100vh; /* Take full screen height */
-    width: 100vw;  /* Take full screen width */
+    height: 100vh;
+    /* Take full screen height */
+    width: 100vw;
+    /* Take full screen width */
     background-color: #f4f4f4;
     font-family: "Arial", sans-serif;
     position: absolute;
@@ -66,4 +68,76 @@
 .animal-button:hover {
     background-color: #2ecc71;
     transform: scale(1.05);
+}
+
+/* Top Buttons Container */
+.top-buttons {
+    display: flex;
+    justify-content: space-between;
+    /* Trophy left, Profile right */
+    align-items: center;
+    position: absolute;
+    top: 60px;
+    /* Closer to the content */
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 125px);
+    /* Adjust width */
+    max-width: 350px;
+    /* Prevents too wide spacing */
+    margin: 0 auto;
+    z-index: 1000;
+}
+
+/* Base Button Styling */
+.leaderboard-button,
+.profile-button {
+    width: 60px;
+    /* Increased size */
+    height: 60px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Leaderboard Icon */
+.leaderboard-icon {
+    width: 58px;
+    /* Bigger icon */
+    height: 58px;
+    object-fit: contain;
+    background-color: white;
+    padding: 8px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+.leaderboard-button:hover .leaderboard-icon {
+    border-color: #ffcc00;
+    transform: scale(1.15);
+}
+
+/* Profile Icon */
+.profile-icon {
+    width: 58px;
+    /* Bigger icon */
+    height: 58px;
+    object-fit: cover;
+    border-radius: 50%;
+    background-color: white;
+    padding: 8px;
+    border: 2px solid #ccc;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+.profile-button:hover .profile-icon {
+    border-color: #ffcc00;
+    transform: scale(1.15);
 }

@@ -78,6 +78,8 @@ const Picture: React.FC = () => {
 
             if (result === "No prediction made - confidence too low") {
                 result = "Sorry, we couldn't confidently identify the animal. Try a clearer image!";
+            } else if (result === "Please wait 5 minutes between submissions or move at least 100 meters away.") {
+                result = "Sorry, you're submitting too frequently. Please wait 5 minutes or move 100m away.";
             } else {
                 result = "This is a... " + result + "!";
                 setCanMakePosting(true); // Allow posting if a valid prediction was made
@@ -198,11 +200,11 @@ const Picture: React.FC = () => {
                 )}
 
                 {/* Display Analyzed Result */}
-                {analyzedResult && 
+                {analyzedResult &&
                     <div className="result-container">
                         <p className="result-text">🦉 <strong>{analyzedResult}</strong></p>
                     </div>
-                    }
+                }
 
                 {/* Show Time */}
                 {timestamp && <p className="info-text">🕒 Current Time: {timestamp}</p>}

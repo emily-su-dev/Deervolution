@@ -90,18 +90,48 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
 // Helper function to calculate distance between two points using Haversine formula
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371e3; // Earth's radius in meters
-    const φ1 = lat1 * Math.PI/180;
-    const φ2 = lat2 * Math.PI/180;
-    const Δφ = (lat2-lat1) * Math.PI/180;
-    const Δλ = (lon2-lon1) * Math.PI/180;
+    const φ1 = lat1 * Math.PI / 180;
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lon2 - lon1) * Math.PI / 180;
 
-    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ/2) * Math.sin(Δλ/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return R * c; // Distance in meters
 }
+
+app.get('/profile/:userid', async (req, res) => {
+    const { userid } = req.params;
+    const profileClient = await pool.connect();
+
+    try {
+        const query = `
+            SELECT 
+                COALESCE("Deer", 0) AS Deer, 
+                COALESCE("Canada Goose", 0) AS CanadaGoose, 
+                COALESCE("Raccoon", 0) AS Raccoon, 
+                COALESCE("Squirrel", 0) AS Squirrel, 
+                COALESCE("Sparrow", 0) AS Sparrow
+            FROM accountdatabase
+            WHERE userid = $1;
+        `;
+        const result = await profileClient.query(query, [userid]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.json(result.rows[0]);  // Return user animal sighting data
+    } catch (error) {
+        console.error("Error fetching profile data:", error);
+        res.status(500).json({ error: "Failed to fetch profile data" });
+    } finally {
+        profileClient.release();
+    }
+});
 
 app.post('/increment', async (req, res) => {
     const { result, address, time, userid } = req.body;
