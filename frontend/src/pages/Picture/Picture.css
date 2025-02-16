@@ -50,6 +50,7 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
     margin-bottom: 10px;
     width: 400px; /* Set a fixed width */
+    padding-bottom: 10px;
 }
 
 .title-container-uploaded {
@@ -63,7 +64,8 @@
     text-align: center;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
     margin-bottom: 10px;
-    width: 400px; /* Set a fixed width */
+    width: 0px; 
+    height: 0px;
 }
 
 .subtitle {
@@ -73,6 +75,14 @@
     font-weight: 400;
     font-size: 1.1rem;
     color: #291600;
+}
+
+.subtitle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 /* Button group for camera and gallery */
