@@ -99,7 +99,7 @@ const Picture: React.FC = () => {
             return;
         }
 
-        if (!user?.email) {
+        if (!user?.id) {
             alert("You must be logged in to make a posting.");
             return;
         }
@@ -111,7 +111,7 @@ const Picture: React.FC = () => {
             result,
             address: geoLocation ? `${geoLocation.lat}, ${geoLocation.lng}` : "Unknown",
             time: timestamp || new Date().toISOString(),
-            userid: user.email,
+            userid: user.id,
         };
 
         try {

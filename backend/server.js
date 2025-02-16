@@ -6,6 +6,7 @@ const multer = require('multer');
 const { spawn } = require('child_process');
 const fs = require('fs').promises;
 const path = require('path');
+const { Pool } = require("pg");
 
 const app = express();
 const PORT = 8000;
@@ -15,6 +16,15 @@ const upload = multer({ storage: storage });
 
 app.use(cors());
 app.use(express.json());
+
+// Set up PostgreSQL connection
+const pool = new Pool({
+    user: process.env.DATABASE_USER,
+    host: process.env.DATABASE_HOST,
+    database: process.env.DATABASE_NAME,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+  });
 
 app.get('/', (req, res) => {
     res.send({ message: 'Express server is running!' });
@@ -81,44 +91,35 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
 app.post('/increment', async (req, res) => {
     const { result, address, time, userid } = req.body;
 
+    console.log("result: ", result);
+    console.log("address: ", address);
+    console.log("time: ", time);
+    console.log("userid: ", userid);
+
     // Validate the 'result' field to make sure it corresponds to a valid animal
     const validAnimals = ['Deer', 'Canada Goose', 'Raccoon', 'Squirrel', 'Sparrow'];
     if (!result || !validAnimals.includes(result)) {
         return res.status(400).send('Invalid animal type');
     }
 
+    const client = await pool.connect();
     try {
-        // Step 1: Increment the corresponding animal column for the given userid in accountdatabase
-        const { error: updateError } = await supabase
-            .from('accountdatabase') // Replace with your actual table name
-            .update({ [result]: supabase.raw(`${result} + 1`) }) // Increment the column
-            .eq('userid', userid);
-
-        if (updateError) {
-            return res.status(500).send(`Error updating database: ${updateError.message}`);
-        }
-
-        // Step 2: Add an entry to the user's individual animal history table
-        const sanitizedUserid = userid.replace('@', '_').replace('.', '_');
-        const userAnimalHistoryTable = `${sanitizedUserid}_animal_history`;
-
-        const { error: insertError } = await supabase
-            .from(userAnimalHistoryTable)
-            .insert([
-                {
-                    animal_type: result,
-                    date_time: time || new Date().toISOString(),
-                    location: address || 'Unknown',
-                },
-            ]);
-
-        if (insertError) {
-            return res.status(500).send(`Error inserting history: ${insertError.message}`);
-        }
-
-        res.status(200).send(`Successfully incremented ${result} for user ${userid} and added history entry.`);
+        await client.query('BEGIN');
+        const query = `
+            UPDATE accountdatabase
+            SET "${result}" = COALESCE("${result}", 0) + 1
+            WHERE userid = $1
+            RETURNING *;
+        `;
+        await client.query(query, [userid]);
+        await client.query('COMMIT');
+        res.status(200).send(`Successfully incremented ${result} for user ${userid}.`);
     } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Error:', error);
         res.status(500).send(`Unexpected error: ${error.message}`);
+    } finally {
+        client.release();
     }
 });
 
