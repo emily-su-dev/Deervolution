@@ -91,35 +91,70 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
 app.post('/increment', async (req, res) => {
     const { result, address, time, userid } = req.body;
 
-    console.log("result: ", result);
-    console.log("address: ", address);
-    console.log("time: ", time);
-    console.log("userid: ", userid);
-
-    // Validate the 'result' field to make sure it corresponds to a valid animal
+    // Validate the 'result' field
     const validAnimals = ['Deer', 'Canada Goose', 'Raccoon', 'Squirrel', 'Sparrow'];
     if (!result || !validAnimals.includes(result)) {
         return res.status(400).send('Invalid animal type');
     }
 
-    const client = await pool.connect();
+    // Parse the timestamp into ISO format
+    const formattedTime = new Date(time.replace(", ", " ").replace("a.m.", "AM").replace("p.m.", "PM")).toISOString();
+
     try {
-        await client.query('BEGIN');
-        const query = `
-            UPDATE accountdatabase
-            SET "${result}" = COALESCE("${result}", 0) + 1
-            WHERE userid = $1
-            RETURNING *;
-        `;
-        await client.query(query, [userid]);
-        await client.query('COMMIT');
-        res.status(200).send(`Successfully incremented ${result} for user ${userid}.`);
+        // Increment the animal count
+        const accountClient = await pool.connect();
+        try {
+            await accountClient.query('BEGIN');
+            const query = `
+                UPDATE accountdatabase
+                SET "${result}" = COALESCE("${result}", 0) + 1
+                WHERE userid = $1
+                RETURNING *;
+            `;
+            await accountClient.query(query, [userid]);
+            await accountClient.query('COMMIT');
+        } finally {
+            accountClient.release();
+        }
+
+        // Update recentfindings table
+        const [latitude, longitude] = address.split(',').map(coord => coord.trim());
+        const findingsClient = await pool.connect();
+        try {
+            await findingsClient.query('BEGIN');
+            const query = `
+                INSERT INTO recentfindings (datetime, animal, userid, latitude, longitude)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING *;
+            `;
+            await findingsClient.query(query, [formattedTime, result, userid, latitude, longitude]);
+            await findingsClient.query('COMMIT');
+        } finally {
+            findingsClient.release();
+        }
+
+        return res.status(200).send(`Successfully incremented ${result} for user ${userid}.`);
     } catch (error) {
-        await client.query('ROLLBACK');
         console.error('Error:', error);
-        res.status(500).send(`Unexpected error: ${error.message}`);
+        return res.status(500).send(`Unexpected error: ${error.message}`);
+    }
+});
+
+// Endpoint to get the recent findings for all users in the past x days
+app.get('/recent-findings', async (req, res) => {
+    const { days } = req.query;
+    const findingsClient = await pool.connect();
+    try {
+        const query = `
+            SELECT datetime, animal, userid, latitude, longitude
+            FROM recentfindings
+            WHERE datetime > NOW() - INTERVAL '${days} days'
+            ORDER BY datetime DESC;
+        `;
+        const result = await findingsClient.query(query);
+        res.json(result.rows);
     } finally {
-        client.release();
+        findingsClient.release();
     }
 });
 
