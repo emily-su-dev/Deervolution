@@ -140,19 +140,28 @@ app.post('/increment', async (req, res) => {
     }
 });
 
-// Endpoint to get the recent findings for all users in the past x days
+// Endpoint to get the recent findings for all users in the past hour
 app.get('/recent-findings', async (req, res) => {
-    const { days } = req.query;
     const findingsClient = await pool.connect();
     try {
         const query = `
-            SELECT datetime, animal, userid, latitude, longitude
+            SELECT 
+                datetime, 
+                animal, 
+                userid, 
+                CAST(latitude AS DECIMAL(10,8)) as latitude, 
+                CAST(longitude AS DECIMAL(11,8)) as longitude
             FROM recentfindings
-            WHERE datetime > NOW() - INTERVAL '${days} days'
+            WHERE datetime > NOW() - INTERVAL '1 hour'
             ORDER BY datetime DESC;
         `;
         const result = await findingsClient.query(query);
-        res.json(result.rows);
+        const parsedRows = result.rows.map(row => ({
+            ...row,
+            latitude: parseFloat(row.latitude),
+            longitude: parseFloat(row.longitude)
+        }));
+        res.json(parsedRows);
     } finally {
         findingsClient.release();
     }
