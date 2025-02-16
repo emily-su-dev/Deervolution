@@ -212,6 +212,30 @@ app.get('/recent-findings', async (req, res) => {
     }
 });
 
+app.get('/leaderboard', async (req, res) => {
+    const accountClient = await pool.connect();
+    try {
+        const query = `
+            SELECT 
+                userid,
+                (COALESCE("Deer", 0) * 5 + 
+                 COALESCE("Canada Goose", 0) * 4 + 
+                 COALESCE("Raccoon", 0) * 3 + 
+                 COALESCE("Squirrel", 0) * 2 + 
+                 COALESCE("Sparrow", 0) * 1) AS totalPoints
+            FROM accountdatabase
+            ORDER BY totalPoints DESC;
+        `;
+
+        const result = await accountClient.query(query);
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+        res.status(500).json({ error: "Failed to fetch leaderboard data" });
+    } finally {
+        accountClient.release();
+    }
+});
 
 app.get('/data', async (req, res) => {
     try {

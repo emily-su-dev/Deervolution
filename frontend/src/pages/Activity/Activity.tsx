@@ -172,6 +172,8 @@ const Activity: React.FC = () => {
 
   return (
     <div className="activity-container">
+      <button className="leaderboard-button" onClick={() => navigate("/leaderboard")}>🏆 Leaderboard</button>
+      
       <h1 className="title">🌍 Nearby Animal Sightings</h1>
       <div className="map-container">
         <div id="map" className="map"></div>
