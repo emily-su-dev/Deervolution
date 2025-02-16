@@ -10,11 +10,11 @@ const Profile: React.FC = () => {
     const { user } = useAuth(); // Get the logged-in user
 
     const [stats, setStats] = useState<{ [key: string]: number }>({
-        Deer: 0,
-        CanadaGoose: 0,
-        Raccoon: 0,
-        Squirrel: 0,
-        Sparrow: 0,
+        deer: 0,
+        canadagoose: 0,
+        raccoon: 0,
+        squirrel: 0,
+        sparrow: 0,
     });
 
     useEffect(() => {
@@ -36,7 +36,7 @@ const Profile: React.FC = () => {
 
         fetchProfileData();
     }, [user]);
-
+    
     return (
         <div className="profile-container">
             {/* Back Button */}
@@ -53,23 +53,23 @@ const Profile: React.FC = () => {
             <div className="stats-container">
                 <div className="stat-item">
                     <img src="/icons/deer.png" alt="Deer" className="animal-icon" />
-                    <span className="animal-count">{stats.Deer}</span>
+                    <span className="animal-count">{stats.deer}</span>
                 </div>
                 <div className="stat-item">
                     <img src="/icons/goose.png" alt="Canada Goose" className="animal-icon" />
-                    <span className="animal-count">{stats.CanadaGoose}</span>
+                    <span className="animal-count">{stats.canadagoose}</span>
                 </div>
                 <div className="stat-item">
                     <img src="/icons/raccoon.png" alt="Raccoon" className="animal-icon" />
-                    <span className="animal-count">{stats.Raccoon}</span>
+                    <span className="animal-count">{stats.raccoon}</span>
                 </div>
                 <div className="stat-item">
                     <img src="/icons/squirrel.png" alt="Squirrel" className="animal-icon" />
-                    <span className="animal-count">{stats.Squirrel}</span>
+                    <span className="animal-count">{stats.squirrel}</span>
                 </div>
                 <div className="stat-item">
                     <img src="/icons/sparrow.png" alt="Sparrow" className="animal-icon" />
-                    <span className="animal-count">{stats.Sparrow}</span>
+                    <span className="animal-count">{stats.sparrow}</span>
                 </div>
             </div>
 
