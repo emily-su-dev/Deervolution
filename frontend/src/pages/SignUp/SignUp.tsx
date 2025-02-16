@@ -57,32 +57,6 @@ const SignUp: React.FC = () => {
     } else {
       console.log("User successfully added to accountdatabase");
     }
-  
-    // Step 3: Create a new table for the user dynamically
-    try {
-      const sanitizedEmail = email.replace('@', '_').replace('.', '_');
-      console.log("Sanitized email:", sanitizedEmail);
-      const createTableQuery = `
-        CREATE TABLE IF NOT EXISTS ${sanitizedEmail}_animal_history (
-          id SERIAL PRIMARY KEY,
-          animal_type TEXT NOT NULL,
-          date_time TIMESTAMPTZ NOT NULL DEFAULT now(),
-          location TEXT NOT NULL
-        );
-      `;
-  
-      const { error: tableError } = await supabase.rpc('run_sql', {
-        query: createTableQuery
-      });
-  
-      if (tableError) {
-        console.error("Error creating user-specific table:", tableError.message);
-      } else {
-        console.log(`Table for ${email} created successfully!`);
-      }
-    } catch (err) {
-      console.error("Error executing dynamic SQL:", err);
-    }
   };
   
   
