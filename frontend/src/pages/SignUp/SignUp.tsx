@@ -31,38 +31,26 @@ const SignUp: React.FC = () => {
       return;
     }
   
-    // Step 1: Check if email already exists in 'accountdatabase'
-    const { data: existingUser, error: userCheckError } = await supabase
-      .from("accountdatabase")
-      .select("userid")
-      .eq("userid", email); // Check if the email already exists in 'accountdatabase'
-  
-    if (userCheckError) {
-      setMessage(`Error checking if email exists: ${userCheckError.message}`);
-      return;
-    }
-  
-    if (existingUser && existingUser.length > 0) {
-      // If email exists, stop and display message
-      setMessage("This email is already registered. Please sign in.");
-      return;
-    }
-  
-    // Step 2: Sign up user with Supabase auth
+    // Step 1: Sign up user with Supabase auth first to get the UUID
     const { data, error } = await supabase.auth.signUp({ email, password });
   
     if (error) {
       setMessage(`Error: ${error.message}`);
       return;
     }
+
+    if (!data.user?.id) {
+      setMessage("Error: Failed to create user");
+      return;
+    }
   
     console.log("User created:", data);
     setMessage("Sign-up successful! Check your email for verification.");
   
-    // Step 3: Insert new row into 'accountdatabase'
+    // Step 2: Insert new row into 'accountdatabase' using the UUID
     const { error: insertError } = await supabase
-      .from("accountdatabase") // Ensure this is your actual table name
-      .insert([{ userid: email }]); // Other columns will use default values
+      .from("accountdatabase")
+      .insert([{ userid: data.user.id }]); // Use the UUID instead of email
   
     if (insertError) {
       console.error("Error inserting user into accountdatabase:", insertError.message);
@@ -70,7 +58,7 @@ const SignUp: React.FC = () => {
       console.log("User successfully added to accountdatabase");
     }
   
-    // Step 4: Create a new table for the user dynamically
+    // Step 3: Create a new table for the user dynamically
     try {
       const sanitizedEmail = email.replace('@', '_').replace('.', '_');
       console.log("Sanitized email:", sanitizedEmail);
@@ -83,7 +71,6 @@ const SignUp: React.FC = () => {
         );
       `;
   
-      // Call the run_sql function
       const { error: tableError } = await supabase.rpc('run_sql', {
         query: createTableQuery
       });
