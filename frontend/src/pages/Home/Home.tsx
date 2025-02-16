@@ -18,7 +18,7 @@ const Home: React.FC = () => {
           <img src={logo} alt="Deervolution Logo" className="logo" />
         </div>
         <h1 className="text-2xl font-bold">Deervolution</h1>
-        <p className="text-sm">Discover wild life at UTM!</p>
+        <p className="text-sm">Discover wildlife at UTM!</p>
       </div>
 
       {/* TEMPORARY ACTIVITY BUTTON */}

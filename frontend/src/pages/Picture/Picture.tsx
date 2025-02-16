@@ -104,11 +104,19 @@ const Picture: React.FC = () => {
                 </div>
 
                 {/* Page Title */}
-                <div className={previewImage ? "title-container-uploaded" : "title-container"}>
-                    <h1 className="title">📸 Capture Your Animal Sighting</h1>
-                    <div className="subtitle">
-                        <p className="subtitle">Upload a picture of the animal you found!</p>
-                    </div>
+                <div>
+                    {!previewImage ? (
+                        <div className="title-container">
+                            <h1 className="title">📸 Capture Your Animal Sighting</h1>
+                            <div className="subtitle-container">
+                                <p className="subtitle">Upload a picture of the animal you found!</p>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="title-container">
+                            <h1 className="title">📸 Capture Your Animal Sighting</h1>
+                        </div>
+                    )}
                 </div>
 
                 {/* Camera Input */}
