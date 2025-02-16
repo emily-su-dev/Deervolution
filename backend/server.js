@@ -78,54 +78,48 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
 
 app.post('/increment', async (req, res) => {
     const { result, address, time, userid } = req.body;
-  
-    // Validate the 'result' field to make sure it corresponds to a valid animal
-    if (!result || !['deers', 'geese', 'racoons', 'squirrels', 'sparrow'].includes(result)) {
-      return res.status(400).send('Invalid animal type');
-    }
-  
-    try {
-      // The userid should be passed as part of the request
-  
-      // Step 1: Increment the corresponding animal column for the given userid in accountdatabase
-      const { data: updateData, error: updateError } = await supabase
-        .from('accountdatabase') // Replace with your actual table name
-        .update({ [result]: supabase.raw(`${result} + 1`) }) // Dynamically increment the column
-        .eq('userid', userid);
-  
-      if (updateError) {
-        return res.status(500).send(`Error: ${updateError.message}`);
-      }
-  
-      // Step 2: Add an entry to the user's individual animal history table
-      // Sanitize the email to form a valid table name (replace `@` and `.` for SQL compatibility)
-      const sanitizedUserid = userid.replace('@', '_').replace('.', '_');
-      const userAnimalHistoryTable = `${sanitizedUserid}_animal_history`;
-  
-      const { data: insertData, error: insertError } = await supabase
-        .from(userAnimalHistoryTable) // Use the user's table dynamically
-        .insert([
-          {
-            animal_type: result,
-            date_time: time || new Date().toISOString(), // Use provided time or current time
-            location: address || 'Unknown', // Use provided address or default 'Unknown'
-          },
-        ]);
 
-        //Step 3: Add an entry to the recentFindings table 
-        
-  
-      if (insertError) {
-        return res.status(500).send(`Error adding to history table: ${insertError.message}`);
-      }
-  
-      // Step 3: Send success message
-      res.status(200).send(`Successfully incremented ${result} for user ${userid} and added history entry.`);
-    } catch (error) {
-      res.status(500).send(`Unexpected error: ${error.message}`);
+    // Validate the 'result' field to make sure it corresponds to a valid animal
+    const validAnimals = ['Deer', 'Canada Goose', 'Racoon', 'Squirrel', 'Sparrow'];
+    if (!result || !validAnimals.includes(result)) {
+        return res.status(400).send('Invalid animal type');
     }
-  });
-  
+
+    try {
+        // Step 1: Increment the corresponding animal column for the given userid in accountdatabase
+        const { error: updateError } = await supabase
+            .from('accountdatabase') // Replace with your actual table name
+            .update({ [result]: supabase.raw(`${result} + 1`) }) // Increment the column
+            .eq('userid', userid);
+
+        if (updateError) {
+            return res.status(500).send(`Error updating database: ${updateError.message}`);
+        }
+
+        // Step 2: Add an entry to the user's individual animal history table
+        const sanitizedUserid = userid.replace('@', '_').replace('.', '_');
+        const userAnimalHistoryTable = `${sanitizedUserid}_animal_history`;
+
+        const { error: insertError } = await supabase
+            .from(userAnimalHistoryTable)
+            .insert([
+                {
+                    animal_type: result,
+                    date_time: time || new Date().toISOString(),
+                    location: address || 'Unknown',
+                },
+            ]);
+
+        if (insertError) {
+            return res.status(500).send(`Error inserting history: ${insertError.message}`);
+        }
+
+        res.status(200).send(`Successfully incremented ${result} for user ${userid} and added history entry.`);
+    } catch (error) {
+        res.status(500).send(`Unexpected error: ${error.message}`);
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
