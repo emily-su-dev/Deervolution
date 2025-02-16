@@ -31,11 +31,27 @@ const Activity: React.FC = () => {
   useEffect(() => {
     const fetchSightings = async () => {
       try {
-        const response = await axios.get(`${VITE_BACKEND_URL}/recent-findings`);
+        const response = await axios.get(`${VITE_BACKEND_URL}/recent-findings`, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        // Check if response.data is an array
         if (Array.isArray(response.data)) {
           setAnimalSightings(response.data);
+        } else if (typeof response.data === 'object') {
+          // If it's an object, check if it has the expected data structure
+          const sightingsData = response.data.data || response.data.sightings;
+          if (Array.isArray(sightingsData)) {
+            setAnimalSightings(sightingsData);
+          } else {
+            console.error("Unexpected data structure:", response.data);
+            setAnimalSightings([]);
+          }
         } else {
-          console.error("Received non-array data:", response.data);
+          console.error("Invalid response format:", response.data);
           setAnimalSightings([]);
         }
       } catch (error) {
