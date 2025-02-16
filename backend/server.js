@@ -45,7 +45,7 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
         // Create a Promise to handle the Python process
         const analyzeImage = () => {
             return new Promise((resolve, reject) => {
-                const pythonProcess = spawn('python', ['analyze.py'], {
+                const pythonProcess = spawn('python3', ['analyze.py'], {
                     env: { ...process.env, IMAGE_PATH: tempFilePath }
                 });
 
@@ -87,6 +87,21 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
     }
 });
 
+// Helper function to calculate distance between two points using Haversine formula
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371e3; // Earth's radius in meters
+    const φ1 = lat1 * Math.PI/180;
+    const φ2 = lat2 * Math.PI/180;
+    const Δφ = (lat2-lat1) * Math.PI/180;
+    const Δλ = (lon2-lon1) * Math.PI/180;
+
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    return R * c; // Distance in meters
+}
 
 app.post('/increment', async (req, res) => {
     const { result, address, time, userid } = req.body;
@@ -97,10 +112,43 @@ app.post('/increment', async (req, res) => {
         return res.status(400).send('Invalid animal type');
     }
 
-    // Parse the timestamp into ISO format
-    const formattedTime = new Date(time.replace(", ", " ").replace("a.m.", "AM").replace("p.m.", "PM")).toISOString();
-
     try {
+        // Get current coordinates
+        const [currentLat, currentLng] = address.split(',').map(coord => parseFloat(coord.trim()));
+
+        // Check if user has made a submission in the last 5 minutes
+        const cooldownClient = await pool.connect();
+        try {
+            const cooldownQuery = `
+                SELECT latitude, longitude, datetime
+                FROM recentfindings 
+                WHERE userid = $1 
+                AND datetime > NOW() - INTERVAL '5 minutes'
+                ORDER BY datetime DESC
+                LIMIT 1;
+            `;
+            const cooldownResult = await cooldownClient.query(cooldownQuery, [userid]);
+
+            if (cooldownResult.rows.length > 0) {
+                const lastPosting = cooldownResult.rows[0];
+                const distance = calculateDistance(
+                    currentLat, currentLng,
+                    parseFloat(lastPosting.latitude),
+                    parseFloat(lastPosting.longitude)
+                );
+
+                // If user hasn't moved at least 100 meters, enforce cooldown
+                if (distance < 100) {
+                    return res.status(429).send('Please wait 5 minutes between submissions or move at least 100 meters away.');
+                }
+            }
+        } finally {
+            cooldownClient.release();
+        }
+
+        // Rest of the existing code remains the same
+        const formattedTime = new Date(time.replace(", ", " ").replace("a.m.", "AM").replace("p.m.", "PM")).toISOString();
+
         // Increment the animal count
         const accountClient = await pool.connect();
         try {
@@ -118,7 +166,6 @@ app.post('/increment', async (req, res) => {
         }
 
         // Update recentfindings table
-        const [latitude, longitude] = address.split(',').map(coord => coord.trim());
         const findingsClient = await pool.connect();
         try {
             await findingsClient.query('BEGIN');
@@ -127,7 +174,7 @@ app.post('/increment', async (req, res) => {
                 VALUES ($1, $2, $3, $4, $5)
                 RETURNING *;
             `;
-            await findingsClient.query(query, [formattedTime, result, userid, latitude, longitude]);
+            await findingsClient.query(query, [formattedTime, result, userid, currentLat, currentLng]);
             await findingsClient.query('COMMIT');
         } finally {
             findingsClient.release();

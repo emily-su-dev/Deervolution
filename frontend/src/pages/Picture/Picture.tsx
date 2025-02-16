@@ -118,9 +118,14 @@ const Picture: React.FC = () => {
             const response = await axios.post(`${VITE_BACKEND_URL}/increment`, postData);
             alert(response.data);
             navigate("/activity");
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error making posting:", error);
-            alert("Error making posting. Please try again.");
+            if (error.response?.status === 429) {
+                alert(error.response.data);
+            } else {
+                alert("Error making posting. Please try again.");
+                console.error("Error making posting:", error);
+            }
         } finally {
             setPosting(false);
         }
