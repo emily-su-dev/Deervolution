@@ -41,7 +41,9 @@ const Profile: React.FC = () => {
             </button>
 
             {/* Profile Title */}
-            <h1 className="profile-title">🐾 My Animal Sightings</h1>
+            <div className="title-container">
+                <h1 className="profile-title">🐾 My Animal Sightings</h1>
+            </div>
 
             {/* Stats Section - Hardcoded Instead of Looping */}
             <div className="stats-container">

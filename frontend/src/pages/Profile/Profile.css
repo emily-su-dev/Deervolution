@@ -4,7 +4,6 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 20px;
 }
 
 /* Back Button */
@@ -33,9 +32,12 @@
 /* Profile Title */
 .profile-title {
     font-size: 24px;
-    margin-top: 60px;
     font-weight: bold;
-    color: #4b2e83;
+    color: #041e57;
+}
+
+.title-container {
+    color: whitesmoke;
 }
 
 /* Stats Grid */
@@ -71,4 +73,5 @@
     font-size: 18px;
     font-weight: bold;
     margin-top: 5px;
+    color: #4b2e83;
 }
