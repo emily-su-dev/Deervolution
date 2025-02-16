@@ -41,8 +41,8 @@ const SignIn: React.FC = () => {
     } else {
       setMessage("Sign-in successful!");
       
-      // After successful sign-in, navigate to the home page
-      navigate("/home");
+      // After successful sign-in, navigate to the activity page
+      navigate("/activity");
     }
   };
 
