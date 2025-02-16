@@ -3,6 +3,15 @@
     margin-bottom: 10px;
 }
 
+.email-input {
+    font-size: 1.2em;
+}
+
 .password-container {
     margin-bottom: 20px;
 }
+
+.password-input {
+    font-size: 1.2em;
+}
+

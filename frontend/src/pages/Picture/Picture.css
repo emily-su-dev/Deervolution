@@ -1,3 +1,7 @@
+p {
+    font-size: 1.2em;
+}
+
 /* Full page container */
 .picture-container {
     display: flex;

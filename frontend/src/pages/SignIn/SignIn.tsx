@@ -54,7 +54,7 @@ const SignIn: React.FC = () => {
       <h1>Sign In</h1>
       <form onSubmit={signInUser}>
         <div className="email-container">
-          <input
+          <input className="email-input"
             type="email"
             placeholder="Enter email"
             value={email}
@@ -64,7 +64,7 @@ const SignIn: React.FC = () => {
         </div>
 
         <div className="password-container">
-          <input
+          <input className="password-input"
             type="password"
             placeholder="Enter password"
             value={password}
