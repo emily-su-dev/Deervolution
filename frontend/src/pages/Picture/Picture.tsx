@@ -188,7 +188,11 @@ const Picture: React.FC = () => {
                 )}
 
                 {/* Display Analyzed Result */}
-                {analyzedResult && <p className="result-text">🦉 <strong>{analyzedResult}</strong></p>}
+                {analyzedResult && 
+                    <div className="result-container">
+                        <p className="result-text">🦉 <strong>{analyzedResult}</strong></p>
+                    </div>
+                    }
 
                 {/* Show Time */}
                 {timestamp && <p className="info-text">🕒 Current Time: {timestamp}</p>}
@@ -196,7 +200,7 @@ const Picture: React.FC = () => {
                 {/* Show "Make Posting and Update Stats" button only if analysis is valid */}
                 {canMakePosting && (
                     <button className="posting-button" onClick={makePosting} disabled={posting}>
-                        📌 {posting ? "Posting..." : "Make Posting and Update Stats!"}
+                        📌 {posting ? "Posting..." : "Make Posting & Update Stats!"}
                     </button>
                 )}
             </div>
