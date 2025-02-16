@@ -3,7 +3,14 @@ import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 
 const supabaseUrl: string = import.meta.env.VITE_SUPABASE_URL as string;
 const supabaseKey: string = import.meta.env.VITE_SUPABASE_KEY as string;
-const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
+const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce'
+  }
+});
 
 interface AuthContextType {
   isAuthenticated: boolean;

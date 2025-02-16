@@ -10,7 +10,14 @@ import upper from "../../assets/deerv_upper_decor.png";
 // Initialize Supabase client
 const supabaseUrl: string = import.meta.env.VITE_SUPABASE_URL as string;
 const supabaseKey: string = import.meta.env.VITE_SUPABASE_KEY as string;
-const supabase:SupabaseClient = createClient(supabaseUrl, supabaseKey);
+const supabase:SupabaseClient = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce'
+  }
+});
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -24,7 +31,7 @@ const SignIn: React.FC = () => {
     e.preventDefault(); // Prevent page reload
 
     // Sign in the user with email and password
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
