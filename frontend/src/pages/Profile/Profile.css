@@ -41,13 +41,44 @@
 }
 
 /* Stats Grid */
-.stats-container {
+.stats-container-lvl1 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-top: 20px;
     padding: 10px;
     max-width: 400px;
+    justify-items: center;
+}
+
+/* Stats Grid */
+.stats-container-lvl2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+    padding: 10px;
+    max-width: 400px;
+    justify-items: center;
+}
+
+/* Position first three animals normally */
+.stat-item:nth-child(1),
+.stat-item:nth-child(2),
+.stat-item:nth-child(3) {
+    grid-column: span 1;
+}
+
+/* Position 4th animal between 1st and 2nd columns */
+.stat-item:nth-child(4) {
+    grid-column: 1 / 2; /* Starts at column 1, spans into column 2 */
+    justify-self: end; /* Center it between the two columns */
+}
+
+/* Position 5th animal between 2nd and 3rd columns */
+.stat-item:nth-child(5) {
+    grid-column: 2 / 4; /* Starts at column 2, spans into column 3 */
+    justify-self: center; /* Center it between the two columns */
 }
 
 /* Stat Item */
@@ -63,8 +94,8 @@
 
 /* Animal Icon */
 .animal-icon {
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     object-fit: contain;
 }
 
