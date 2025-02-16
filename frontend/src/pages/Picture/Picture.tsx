@@ -13,9 +13,11 @@ const Picture: React.FC = () => {
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [analyzedResult, setAnalyzedResult] = useState<string | null>(null); // Store API result
     const [loading, setLoading] = useState<boolean>(false); // Track loading state
+    const [posting, setPosting] = useState<boolean>(false); // Track posting state
     const [canMakePosting, setCanMakePosting] = useState<boolean>(false);
     const [geoLocation, setGeoLocation] = useState<{ lat: number; lng: number } | null>(null);
     const [timestamp, setTimestamp] = useState<string | null>(null);
+    const [userid, setUserid] = useState<string>("user123@example.com"); // Replace with actual user ID from database!!
 
     // Handle image selection
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,6 +89,35 @@ const Picture: React.FC = () => {
             setAnalyzedResult("Error analyzing image. Please try again.");
         } finally {
             setLoading(false); // Hide loading state
+        }
+    };
+
+    // Send Data to Backend on "Make Posting" Click
+    const makePosting = async () => {
+        if (!analyzedResult || analyzedResult.includes("Sorry")) {
+            alert("Cannot make a posting without a valid animal.");
+            return;
+        }
+
+        setPosting(true); // Disable button while posting
+
+        const result = analyzedResult.replace("This is a... ", "").replace("!", "");
+        const postData = {
+            result,
+            address: geoLocation ? `${geoLocation.lat}, ${geoLocation.lng}` : "Unknown",
+            time: timestamp || new Date().toISOString(),
+            userid,
+        };
+
+        try {
+            const response = await axios.post(`${VITE_BACKEND_URL}/increment`, postData);
+            alert(response.data);
+            navigate("/activity"); // Navigate back to activity page
+        } catch (error) {
+            console.error("Error making posting:", error);
+            alert("Error making posting. Please try again.");
+        } finally {
+            setPosting(false);
         }
     };
 
@@ -164,7 +195,9 @@ const Picture: React.FC = () => {
 
                 {/* Show "Make Posting and Update Stats" button only if analysis is valid */}
                 {canMakePosting && (
-                    <button className="posting-button" onClick={() => navigate("/activity")}>📌 Make Posting and Update Stats!</button>
+                    <button className="posting-button" onClick={makePosting} disabled={posting}>
+                        📌 {posting ? "Posting..." : "Make Posting and Update Stats!"}
+                    </button>
                 )}
             </div>
         </div>

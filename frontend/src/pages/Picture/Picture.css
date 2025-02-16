@@ -117,7 +117,20 @@
     margin-top: 20px;
 }
 
-.upload-button:hover, .submit-button:hover {
+
+.posting-button {
+    background-color: #a6520c;
+    color: white;
+    font-size: 1rem;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 20px;
+}
+
+.upload-button:hover, .submit-button:hover, posting-button:hover {
     color: #d3884b;
     background-color: #611a04;
     transform: scale(1.05);
