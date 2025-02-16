@@ -82,7 +82,7 @@ app.post('/increment', async (req, res) => {
     const { result, address, time, userid } = req.body;
 
     // Validate the 'result' field to make sure it corresponds to a valid animal
-    const validAnimals = ['Deer', 'Canada Goose', 'Racoon', 'Squirrel', 'Sparrow'];
+    const validAnimals = ['Deer', 'Canada Goose', 'Raccoon', 'Squirrel', 'Sparrow'];
     if (!result || !validAnimals.includes(result)) {
         return res.status(400).send('Invalid animal type');
     }

@@ -16,6 +16,7 @@ interface AccountData {
   squirrels: number;
   sparrow: number;
 }
+const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
 function App() {
   const [data, setData] = useState<AccountData[]>([]);
@@ -24,7 +25,7 @@ function App() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/data');
+        const response = await fetch(`${VITE_BACKEND_URL}/data`);
         const fetchedData = await response.json();
         setData(fetchedData);
         console.log('Fetched data: ', fetchedData);
