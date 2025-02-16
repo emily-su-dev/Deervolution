@@ -18,7 +18,11 @@ const Leaderboard: React.FC = () => {
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const response = await axios.get(`${VITE_BACKEND_URL}/leaderboard`);
+                const response = await axios.get(`${VITE_BACKEND_URL}/leaderboard`, {
+                    headers: {
+                        'ngrok-skip-browser-warning': '69420'
+                    }
+                });
                 setLeaderboard(response.data);
             } catch (error) {
                 console.error("Error fetching leaderboard:", error);
