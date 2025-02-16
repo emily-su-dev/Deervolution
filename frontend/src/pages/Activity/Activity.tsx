@@ -5,6 +5,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
+interface AnimalSighting {
+  lat: number;
+  lng: number;
+  type: string;
+}
+
 const Activity: React.FC = () => {
   const navigate = useNavigate();
 
@@ -12,9 +18,7 @@ const Activity: React.FC = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [marker, setMarker] = useState<google.maps.Marker | null>(null);
 
-  const [animalSightings, setAnimalSightings] = useState<
-    { lat: number; lng: number; type: string }[]
-  >([]);
+  const [animalSightings, setAnimalSightings] = useState<AnimalSighting[]>([]);
 
   const animalIcons: { [key: string]: string } = {
     Deer: "/icons/deer.png",
@@ -28,9 +32,15 @@ const Activity: React.FC = () => {
     const fetchSightings = async () => {
       try {
         const response = await axios.get(`${VITE_BACKEND_URL}/recent-findings`);
-        setAnimalSightings(response.data); // Set fetched data to state
+        if (Array.isArray(response.data)) {
+          setAnimalSightings(response.data);
+        } else {
+          console.error("Received non-array data:", response.data);
+          setAnimalSightings([]);
+        }
       } catch (error) {
         console.error("Error fetching sightings:", error);
+        setAnimalSightings([]);
       }
     };
 
@@ -119,9 +129,8 @@ const Activity: React.FC = () => {
   };
 
   useEffect(() => {
-    if (map && animalSightings.length > 0) {
+    if (map && animalSightings && Array.isArray(animalSightings)) {
       animalSightings.forEach((sighting) => {
-
         new google.maps.marker.AdvancedMarkerElement({
           position: { lat: sighting.lat, lng: sighting.lng },
           map,
@@ -130,7 +139,7 @@ const Activity: React.FC = () => {
         });
       });
     }
-  }, [map, animalSightings]); // Runs when map is set and animalSightings change
+  }, [map, animalSightings]);
 
   // Reverse Geocode to get nearest place name
   const getNearestPlace = (location: { lat: number; lng: number }) => {
