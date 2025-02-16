@@ -30,8 +30,11 @@ COPY . .
 # Create temp directory for image uploads
 RUN mkdir temp
 
+# Copy and load environment variables
+COPY .env .env
+
 # Expose port
 EXPOSE 8000
 
-# Start the application
+# Start the application using environment variables
 CMD ["node", "server.js"] 
