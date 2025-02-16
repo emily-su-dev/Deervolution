@@ -20,6 +20,7 @@
 .title {
     font-size: 2rem;
     font-weight: bold;
+    margin-top: 100px;
     margin-bottom: 10px;
     color: #2c3e50;
 }
@@ -36,6 +37,7 @@
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background: white;
+    margin-top: 10px;
 }
 
 /* Map itself */
@@ -128,8 +130,8 @@
     width: 58px;
     /* Bigger icon */
     height: 58px;
-    object-fit: cover;
-    border-radius: 50%;
+    object-fit: contain;
+    border-radius: 10px;
     background-color: white;
     padding: 8px;
     border: 2px solid #ccc;
