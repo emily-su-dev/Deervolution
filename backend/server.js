@@ -129,6 +129,17 @@ app.post('/increment', async (req, res) => {
   });
   
 
+app.get('/data', async (req, res) => {
+  try {
+    const { fetchData } = require('./supabaseService');
+    const data = await fetchData();
+    res.json(data);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
