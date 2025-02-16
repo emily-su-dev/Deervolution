@@ -16,7 +16,6 @@ const upload = multer({ storage: storage });
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'build')));
 
 // Set up PostgreSQL connection
 const pool = new Pool({
@@ -30,11 +29,6 @@ const pool = new Pool({
 app.get('/', (req, res) => {
     res.send({ message: 'Express server is running!' });
 });
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-  });
-
 
 app.post('/analyze-image', upload.single('image'), async (req, res) => {
     if (!req.file) {
