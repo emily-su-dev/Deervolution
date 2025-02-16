@@ -35,7 +35,8 @@ const Activity: React.FC = () => {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': '69420'
+            'ngrok-skip-browser-warning': '69420' // This header is used to bypass the ngrok warning
+            // idk it works
           }
         });
         
