@@ -34,7 +34,8 @@ const Activity: React.FC = () => {
         const response = await axios.get(`${VITE_BACKEND_URL}/recent-findings`, {
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420'
           }
         });
         
