@@ -64,6 +64,10 @@ h1 {
   color: white;
 }
 
+p {
+  font-size: 1.4em;
+}
+
 button {
   font-family: 'Anton', sans-serif;
   border-radius: 8px;
