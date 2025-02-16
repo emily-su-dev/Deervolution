@@ -24,7 +24,7 @@ const pool = new Pool({
     database: process.env.DATABASE_NAME,
     password: process.env.DATABASE_PASSWORD,
     port: process.env.DATABASE_PORT,
-  });
+});
 
 app.get('/', (req, res) => {
     res.send({ message: 'Express server is running!' });
@@ -45,7 +45,7 @@ app.post('/analyze-image', upload.single('image'), async (req, res) => {
         // Create a Promise to handle the Python process
         const analyzeImage = () => {
             return new Promise((resolve, reject) => {
-                const pythonProcess = spawn('python3', ['analyze.py'], {
+                const pythonProcess = spawn('python', ['analyze.py'], {
                     env: { ...process.env, IMAGE_PATH: tempFilePath }
                 });
 
@@ -167,14 +167,14 @@ app.get('/recent-findings', async (req, res) => {
 
 
 app.get('/data', async (req, res) => {
-  try {
-    const { fetchData } = require('./supabaseService');
-    const data = await fetchData();
-    res.json(data);
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: error.message });
-  }
+    try {
+        const { fetchData } = require('./supabaseService');
+        const data = await fetchData();
+        res.json(data);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 app.listen(PORT, () => {
