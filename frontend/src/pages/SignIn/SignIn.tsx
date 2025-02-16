@@ -41,8 +41,8 @@ const SignIn: React.FC = () => {
     } else {
       setMessage("Sign-in successful!");
       
-      // After successful sign-in, navigate to the home page
-      navigate("/home");
+      // After successful sign-in, navigate to the activity page
+      navigate("/activity");
     }
   };
 
@@ -54,7 +54,7 @@ const SignIn: React.FC = () => {
       <h1>Sign In</h1>
       <form onSubmit={signInUser}>
         <div className="email-container">
-          <input
+          <input className="email-input"
             type="email"
             placeholder="Enter email"
             value={email}
@@ -64,7 +64,7 @@ const SignIn: React.FC = () => {
         </div>
 
         <div className="password-container">
-          <input
+          <input className="password-input"
             type="password"
             placeholder="Enter password"
             value={password}

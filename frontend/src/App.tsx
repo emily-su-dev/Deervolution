@@ -6,6 +6,7 @@ import Activity from "./pages/Activity/Activity";
 import Home from "./pages/Home/Home";
 import Picture from "./pages/Picture/Picture";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
+import Profile from "./pages/Profile/Profile";
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/activity" element={<ProtectedRoute element={<Activity />} />} />
           <Route path="/picture" element={<ProtectedRoute element={<Picture />} />} />
           <Route path="/leaderboard" element={<ProtectedRoute element={<Leaderboard />} />} />
+          <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
         </Routes>
       </Router>
     </AuthProvider>

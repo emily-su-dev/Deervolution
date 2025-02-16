@@ -21,9 +21,6 @@ const Home: React.FC = () => {
         <p className="text-sm">Discover wildlife at UTM!</p>
       </div>
 
-      {/* TEMPORARY ACTIVITY BUTTON */}
-      <button onClick={() => navigate("/activity")}>Go to Activity</button>
-
       {/* Sign-up button */}
       <button onClick={() => navigate("/SignUp")}>
         Create An Account

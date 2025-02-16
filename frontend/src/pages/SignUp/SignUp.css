@@ -2,6 +2,10 @@
     margin-bottom: 10px;
 }
 
+.email-input, .password-input {
+    font-size: 1.2em;
+}
+
 .password-container {
     margin-bottom: 20px;
 }

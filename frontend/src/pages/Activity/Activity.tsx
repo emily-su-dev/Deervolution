@@ -199,8 +199,19 @@ const Activity: React.FC = () => {
 
   return (
     <div className="activity-container">
-      <button className="leaderboard-button" onClick={() => navigate("/leaderboard")}>🏆 Leaderboard</button>
-      
+      {/* Top Buttons */}
+      <div className="top-buttons">
+        {/* Leaderboard Button */}
+        <button className="leaderboard-button" onClick={() => navigate("/leaderboard")}>
+          <img src="/icons/deerv_trophy.png" className="leaderboard-icon" alt="Leaderboard" />
+        </button>
+
+        {/* Profile Button */}
+        <button className="profile-button" onClick={() => navigate("/profile")}>
+          <img src="/icons/default_profile.jpg" className="profile-icon" alt="Profile" />
+        </button>
+      </div>
+
       <h1 className="title">🌍 Nearby Animal Sightings</h1>
       <div className="map-container">
         <div id="map" className="map"></div>
