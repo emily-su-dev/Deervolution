@@ -146,11 +146,9 @@ app.get('/recent-findings', async (req, res) => {
     try {
         const query = `
             SELECT 
-                datetime, 
-                animal, 
-                userid, 
-                CAST(latitude AS DECIMAL(10,8)) as latitude, 
-                CAST(longitude AS DECIMAL(11,8)) as longitude
+                animal as type, 
+                CAST(latitude AS DECIMAL(10,8)) as lat, 
+                CAST(longitude AS DECIMAL(11,8)) as lng
             FROM recentfindings
             WHERE datetime > NOW() - INTERVAL '1 hour'
             ORDER BY datetime DESC;
@@ -158,8 +156,8 @@ app.get('/recent-findings', async (req, res) => {
         const result = await findingsClient.query(query);
         const parsedRows = result.rows.map(row => ({
             ...row,
-            latitude: parseFloat(row.latitude),
-            longitude: parseFloat(row.longitude)
+            lat: parseFloat(row.lat),
+            lng: parseFloat(row.lng)
         }));
         res.json(parsedRows);
     } finally {
