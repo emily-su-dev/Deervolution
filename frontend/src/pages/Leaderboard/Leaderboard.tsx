@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
 interface User {
-    userid: string;
+    email: string;
     totalpoints: number;
 }
 
@@ -44,15 +44,15 @@ const Leaderboard: React.FC = () => {
                     <thead>
                         <tr>
                             <th><strong>Rank</strong></th>
-                            <th><strong>User</strong></th>
+                            <th><strong>User Email</strong></th>
                             <th><strong>Total Points</strong></th>
                         </tr>
                     </thead>
                     <tbody>
                         {leaderboard.map((user, index) => (
-                            <tr key={user.userid}>
+                            <tr key={user.email}>
                                 <td>{index + 1}</td>
-                                <td>{user.userid}</td>
+                                <td>{user.email}</td>
                                 <td className="points-column">{user.totalpoints}</td>
                             </tr>
                         ))}

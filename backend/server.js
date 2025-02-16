@@ -217,16 +217,17 @@ app.get('/leaderboard', async (req, res) => {
     try {
         const query = `
             SELECT 
-                userid,
+                au.email,
                 (COALESCE("Deer", 0) * 5 + 
                  COALESCE("Canada Goose", 0) * 4 + 
                  COALESCE("Raccoon", 0) * 3 + 
                  COALESCE("Squirrel", 0) * 2 + 
                  COALESCE("Sparrow", 0) * 1) AS totalPoints
-            FROM accountdatabase
+            FROM accountdatabase ad
+            JOIN auth.users au ON ad.userid = au.id
             ORDER BY totalPoints DESC;
         `;
-
+        
         const result = await accountClient.query(query);
         res.json(result.rows);
     } catch (error) {
