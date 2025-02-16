@@ -181,7 +181,7 @@ const Activity: React.FC = () => {
 
         {/* Profile Button */}
         <button className="profile-button" onClick={() => navigate("/profile")}>
-          <img src="/icons/default_profile.jpg" className="profile-icon" alt="Profile" />
+          <img src="/icons/deerfault_profile.png" className="profile-icon" alt="Profile" />
         </button>
       </div>
 
