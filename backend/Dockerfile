@@ -30,11 +30,11 @@ COPY . .
 # Create temp directory for image uploads
 RUN mkdir temp
 
-# Copy and load environment variables
-COPY .env .env
+# Create default .env file (these will be overridden by actual environment variables)
+RUN echo "SUPABASE_URL=\nSUPABASE_ANON_KEY=" > .env
 
 # Expose port
 EXPOSE 8000
 
-# Start the application using environment variables
+# Start the application
 CMD ["node", "server.js"] 
