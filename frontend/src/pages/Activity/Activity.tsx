@@ -5,6 +5,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 
+interface AnimalSighting {
+  lat: number;
+  lng: number;
+  type: string;
+}
+
 const Activity: React.FC = () => {
   const navigate = useNavigate();
 
@@ -12,9 +18,7 @@ const Activity: React.FC = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [marker, setMarker] = useState<google.maps.Marker | null>(null);
 
-  const [animalSightings, setAnimalSightings] = useState<
-    { lat: number; lng: number; type: string }[]
-  >([]);
+  const [animalSightings, setAnimalSightings] = useState<AnimalSighting[]>([]);
 
   const animalIcons: { [key: string]: string } = {
     Deer: "/icons/deer.png",
@@ -27,10 +31,34 @@ const Activity: React.FC = () => {
   useEffect(() => {
     const fetchSightings = async () => {
       try {
-        const response = await axios.get(`${VITE_BACKEND_URL}/recent-findings`);
-        setAnimalSightings(response.data); // Set fetched data to state
+        const response = await axios.get(`${VITE_BACKEND_URL}/recent-findings`, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420' // This header is used to bypass the ngrok warning
+            // idk it works
+          }
+        });
+        
+        // Check if response.data is an array
+        if (Array.isArray(response.data)) {
+          setAnimalSightings(response.data);
+        } else if (typeof response.data === 'object') {
+          // If it's an object, check if it has the expected data structure
+          const sightingsData = response.data.data || response.data.sightings;
+          if (Array.isArray(sightingsData)) {
+            setAnimalSightings(sightingsData);
+          } else {
+            console.error("Unexpected data structure:", response.data);
+            setAnimalSightings([]);
+          }
+        } else {
+          console.error("Invalid response format:", response.data);
+          setAnimalSightings([]);
+        }
       } catch (error) {
         console.error("Error fetching sightings:", error);
+        setAnimalSightings([]);
       }
     };
 
@@ -119,9 +147,8 @@ const Activity: React.FC = () => {
   };
 
   useEffect(() => {
-    if (map && animalSightings.length > 0) {
+    if (map && animalSightings && Array.isArray(animalSightings)) {
       animalSightings.forEach((sighting) => {
-
         new google.maps.marker.AdvancedMarkerElement({
           position: { lat: sighting.lat, lng: sighting.lng },
           map,
@@ -130,7 +157,7 @@ const Activity: React.FC = () => {
         });
       });
     }
-  }, [map, animalSightings]); // Runs when map is set and animalSightings change
+  }, [map, animalSightings]);
 
   // Reverse Geocode to get nearest place name
   const getNearestPlace = (location: { lat: number; lng: number }) => {
